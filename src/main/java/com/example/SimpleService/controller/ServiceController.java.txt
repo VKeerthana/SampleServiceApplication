@@ -1,0 +1,53 @@
+package com.example.SimpleService.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.SimpleService.model.Time;
+import com.example.SimpleService.model.Number;
+
+@RestController
+public class ServiceController {
+   private static Map<String, Time> timeResponse = new HashMap<>();
+   private static Map<String, Number> numberResponse = new HashMap<>();
+	
+	public static Map<String, Time> getIsoTime(){
+		Time isoTime = new Time();
+		isoTime.setIsoTime(getTime());
+		TimeZone tz = TimeZone.getTimeZone("UTC");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+		df.setTimeZone(tz);
+		isoTime.setIsoTime(df.format(new Date()));
+		timeResponse.put("ISO TIME",isoTime)
+		return timeResponse;
+	}
+	
+	public static Map<String, Number> getRandomNumber(min,max){
+		if (min >= max) {
+			System.Out.Println("upperBound must be greater than lowerBound");
+        }
+        Random r = new Random();
+        int num =  r.nextInt((max - min) + 1) + min;
+		numberResponse.put("Random Number between "+min+"&"+max+" is ::",num);
+		
+	}
+   
+   @RequestMapping(value = "/time")
+   public ResponseEntity<Object> getTime() {
+	  timeResponse = getIsoTime();
+      return new ResponseEntity<>(timeResponse.values(), HttpStatus.OK);
+   }
+   @RequestMapping(value = "/randomNumbers")
+   public ResponseEntity<Object> getNumber(@PathVariable int lowerBound, @PathVariable int upperBound) {
+      numberResponse = getRandomNumber;
+	  return new ResponseEntity<>(numberResponse.values(), HttpStatus.OK);
+   }
+}

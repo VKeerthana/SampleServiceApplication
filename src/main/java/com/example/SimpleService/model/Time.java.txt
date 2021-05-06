@@ -1,0 +1,12 @@
+package com.example.SimpleService.model;
+
+public class Time{
+   private String isoTime;
+
+   public String getIsoTime;() {
+      return isoTime;
+   }
+   public void setIsoTime;(String isoTime) {
+      this.isoTime = isoTime;
+   }
+}
